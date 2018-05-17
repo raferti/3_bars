@@ -39,7 +39,7 @@ def get_closest_bar(data, longitude, latitude):
 
 
 if __name__ == '__main__':
-    filepach = input('Укажите путь и имя .json файла: ')
+    filepach = input('Укажите путь и имя .json файла:  ')
     try:
         data_loading = load_data(filepach)
     except FileNotFoundError:
