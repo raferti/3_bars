@@ -3,45 +3,34 @@ import math
 
 
 def load_data(filepath):
-    with open(filepath, 'r', encoding='UTF8') as data_file:
+    with open(filepath, encoding='UTF8') as data_file:
         bars_data = json.load(data_file)
         return bars_data
 
 
-def get_biggest_bar(data):
-    seats_count = 0
-    name = 'ничего не найдено'
-    for i in range(len(data['features'])):
-        if seats_count < data['features'][i]['properties']['Attributes']['SeatsCount']:
-            seats_count = data['features'][i]['properties']['Attributes']['SeatsCount']
-            name = data['features'][i]['properties']['Attributes']['Name']
-    return name
+def get_biggest_bar(bar_list):
+    return max(bar_list['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
 
 
-def get_smallest_bar(data):
-    seats_count = 0
-    name = 'ничего не найдено'
-    for i in range(len(data['features'])):
-        if seats_count >= data['features'][i]['properties']['Attributes']['SeatsCount']:
-            seats_count = data['features'][i]['properties']['Attributes']['SeatsCount']
-            name = data['features'][i]['properties']['Attributes']['Name']
-    return name
+def get_smallest_bar(bar_list):
+    return min(bar_list['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
 
 
-def get_closest_bar(data, longitude, latitude):
-    dist = 0.0
-    name = 'ничего не найдено'
-    for i in range(len(data['features'])):
-        if dist >= math.sqrt((data['features'][i]['geometry']['coordinates'][0] - longitude) ** 2 +
-                                             (data['features'][i]['geometry']['coordinates'][1] - latitude) ** 2):
-            name = data['features'][i]['properties']['Attributes']['Name']
-    return name
+def get_distance_to_bar(longitude, latitude, coordinates_x, coordinates_y):
+    return math.sqrt((coordinates_x - longitude) ** 2 + (coordinates_y - latitude) ** 2)
+
+
+def get_closest_bar(bar_list, longitude, latitude):
+    return min(bar_list['features'], key=lambda x: get_distance_to_bar(longitude, latitude,
+                                                                       x['geometry']['coordinates'][0],
+                                                                       x['geometry']['coordinates'][1]))
 
 
 if __name__ == '__main__':
-    filepach = input('Укажите путь и имя .json файла:  ')
+
+    file_pach = input('Укажите путь и имя .json файла:  ')
     try:
-        data_loading = load_data(filepach)
+        data_loading = load_data(file_pach)
     except FileNotFoundError:
         print("Файл не найден!")
         exit()
@@ -49,6 +38,6 @@ if __name__ == '__main__':
     longitude = float(input('Укажите долготу(longitude) вашего местоположения: '))
     latitude = float(input('Укажите широту(latitude) вашего местоположения: '))
 
-    print('Самый большой бар: ' + get_biggest_bar(data_loading))
-    print('Самый маленький бар: ' + get_smallest_bar(data_loading))
-    print('Ближайший бар: ' + get_closest_bar(data_loading, longitude, latitude))
+    print('Самый большой бар: ' + str(get_biggest_bar(data_loading)))
+    print('Самый маленький бар: ' + str(get_smallest_bar(data_loading)))
+    print('Ближайший бар: ' + str(get_closest_bar(data_loading, longitude, latitude)))
