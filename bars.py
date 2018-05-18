@@ -26,16 +26,6 @@ def get_name_bar(bar):
 
 
 def get_closest_bar(bar_list, longitude, latitude):
-    try:
-        longitude = float(longitude)
-    except ValueError:
-        exit('Долгота(longitude) должна быть числом')
-
-    try:
-        latitude = float(latitude)
-    except ValueError:
-        exit('Широта(latitude) должна быть числом')
-
     return min(
         bar_list,
         key=lambda x:
@@ -54,8 +44,15 @@ if __name__ == '__main__':
     except FileNotFoundError:
         exit('Файл bars.json не найден!')
 
-    longitude = input('Укажите долготу(longitude) вашего местоположения (например 37.35805): ')
-    latitude = input('Укажите широту(latitude) вашего местоположения (например: 55.846144): ')
+    try:
+        longitude = float(input('Укажите долготу(longitude) вашего местоположения (например 37.35805): '))
+    except ValueError:
+        exit('Долгота(longitude) должна быть числом')
+
+    try:
+        latitude = float(input('Укажите широту(latitude) вашего местоположения (например: 55.846144): '))
+    except ValueError:
+        exit('Широта(latitude) должна быть числом')
 
     print('{} {}'.format('Самый большой бар', get_name_bar(get_biggest_bar(loaded_data))))
     print('{} {}'.format('Самый маленький бар', get_name_bar(get_smallest_bar(loaded_data))))
