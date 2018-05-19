@@ -10,26 +10,22 @@ def load_data(file_path):
 
 
 def get_biggest_bar(bar_list):
-    return get_name_bar(max(bar_list, key=lambda x: x['properties']['Attributes']['SeatsCount']))
+    bar_name = max(bar_list, key=lambda x: x['properties']['Attributes']['SeatsCount'])
+    return bar_name['properties']['Attributes']['Name']
 
 
 def get_smallest_bar(bar_list):
-    return get_name_bar(min(bar_list, key=lambda x: x['properties']['Attributes']['SeatsCount']))
+    bar_name = min(bar_list, key=lambda x: x['properties']['Attributes']['SeatsCount'])
+    return bar_name['properties']['Attributes']['Name']
 
 
 def get_distance_to_bar(longitude, latitude, coordinates_x, coordinates_y):
     return math.sqrt((coordinates_x - longitude) ** 2 + (coordinates_y - latitude) ** 2)
 
 
-def get_name_bar(bar):
-    bar_name = 'носит название: {}'
-    return bar_name.format(bar['properties']['Attributes']['Name'])
-
-
 def get_closest_bar(bar_list, longitude, latitude):
     try:
-        return get_name_bar(
-                min(
+        bar_name = min(
                     bar_list,
                     key=lambda x:
                     get_distance_to_bar(
@@ -39,7 +35,7 @@ def get_closest_bar(bar_list, longitude, latitude):
                         x['geometry']['coordinates'][1]
                     )
                 )
-        )
+        return bar_name['properties']['Attributes']['Name']
     except ValueError:
         print('Ошибка при расчете ближайшего бара. Значение координат должно быть числом')
 
