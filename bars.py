@@ -52,15 +52,9 @@ def create_parser():
 
 if __name__ == '__main__':
     script_argument = create_parser().parse_args()
-    if script_argument.file_path:
-        try:
-            loaded_data = load_data(script_argument.file_path)
-        except FileNotFoundError:
-            exit('.json файл с данными о барах не найден!')
-
+    loaded_data = load_data(script_argument.file_path)
     longitude = input('Укажите долготу(longitude) вашего местоположения (например 37.35805): ')
     latitude = input('Укажите широту(latitude) вашего местоположения (например: 55.846144): ')
-
     print('{} {}'.format('Самый большой бар', get_biggest_bar(loaded_data)))
     print('{} {}'.format('Самый маленький бар', get_smallest_bar(loaded_data)))
     print('{} {}'.format('Ближайший бар', get_closest_bar(loaded_data, longitude, latitude)))
