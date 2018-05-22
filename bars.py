@@ -9,9 +9,11 @@ def load_data(file_path):
             bars_data = json.load(data_file)
             return bars_data['features']
     except ValueError:
-        exit('Данные в файле в неправильном формате')
+        error = 'Данные в файле в неправильном формате'
+        raise ValueError(error)
     except FileNotFoundError:
-        exit('.json файл с данными о барах не найден!')
+        error = '.json файл с данными о барах не найден!'
+        raise FileNotFoundError(error)
 
 
 def get_biggest_bar(bar_list):
@@ -35,16 +37,21 @@ def get_name_bar(bar):
 
 def get_closest_bar(bar_list, longitude, latitude):
     try:
-        return min(bar_list, key=lambda x: get_distance_to_bar(
-            float(longitude),
-            float(latitude),
-            x['geometry']['coordinates'][0],
-            x['geometry']['coordinates'][1]
+        return get_name_bar(
+            min(
+                bar_list, key=lambda x:
+                get_distance_to_bar(
+                    float(longitude),
+                    float(latitude),
+                    x['geometry']['coordinates'][0],
+                    x['geometry']['coordinates'][1]
+                )
             )
-            )
+        )
     except ValueError:
-        exit('Ошибка при расчете ближайшего бара. ' 
-             'Значение координат должно быть числом')
+        error = 'Ошибка при расчете ближайшего бара. ' \
+                'Значение координат должно быть числом'
+        raise ValueError(error)
 
 
 def create_parser():
@@ -66,12 +73,4 @@ if __name__ == '__main__':
     print('{} {}'.format('Самый маленький бар',
                          get_name_bar(get_smallest_bar(loaded_data))))
     print('{} {}'.format('Ближайший бар',
-                         get_name_bar(
-                             get_closest_bar(
-                                 loaded_data,
-                                 longitude,
-                                 latitude
-                             )
-                         )
-                         )
-          )
+                         get_closest_bar(loaded_data, longitude, latitude)))
