@@ -37,17 +37,16 @@ def get_name_bar(bar):
 
 def get_closest_bar(bar_list, longitude, latitude):
     try:
-        return get_name_bar(
-            min(
-                bar_list, key=lambda x:
-                get_distance_to_bar(
-                    float(longitude),
-                    float(latitude),
-                    x['geometry']['coordinates'][0],
-                    x['geometry']['coordinates'][1]
-                )
+        closest_bar = min(
+            bar_list,
+            key=lambda x: get_distance_to_bar(
+                float(longitude),
+                float(latitude),
+                x['geometry']['coordinates'][0],
+                x['geometry']['coordinates'][1]
             )
         )
+        return get_name_bar(closest_bar)
     except ValueError:
         error = 'Ошибка при расчете ближайшего бара. ' \
                 'Значение координат должно быть числом'
