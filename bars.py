@@ -29,7 +29,7 @@ def get_distance_to_bar(longitude, latitude, coordinates_x, coordinates_y):
                      (coordinates_y - latitude) ** 2)
 
 
-def get_bar_name(bar):
+def get_name_bar(bar):
     return bar['properties']['Attributes']['Name']
 
 
@@ -62,11 +62,11 @@ if __name__ == '__main__':
     latitude = input('Укажите широту(latitude)'
                      ' вашего местоположения (например: 55.846144): ')
     print('{} {}'.format('Самый большой бар',
-                         get_bar_name(get_biggest_bar(loaded_data))))
+                         get_name_bar(get_biggest_bar(loaded_data))))
     print('{} {}'.format('Самый маленький бар',
-                         get_bar_name(get_smallest_bar(loaded_data))))
+                         get_name_bar(get_smallest_bar(loaded_data))))
     print('{} {}'.format('Ближайший бар',
-                         get_bar_name(
+                         get_name_bar(
                              get_closest_bar(
                                  loaded_data,
                                  longitude,
