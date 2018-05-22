@@ -58,7 +58,7 @@ if __name__ == '__main__':
     script_argument = create_parser().parse_args()
     loaded_data = load_data(script_argument.file_path)
     longitude = input('Укажите долготу(longitude) '
-                      'вашего местоположения (например 37.35805): ')
+                      'вашего местоположения (например 37.35807): ')
     latitude = input('Укажите широту(latitude)'
                      ' вашего местоположения (например: 55.846144): ')
     print('{} {}'.format('Самый большой бар',
