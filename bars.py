@@ -45,7 +45,7 @@ def get_closest_bar(bar_list, longitude, latitude):
             x['geometry']['coordinates'][1]
         )
     )
-    return closest_bar
+    return get_name_bar(closest_bar)
 
 
 def create_parser():
@@ -55,9 +55,9 @@ def create_parser():
     return parser
 
 
-def is_float_number(value):
+def is_float_number(float_number):
     try:
-        float(value)
+        float(float_number)
         return True
     except ValueError:
         return False
@@ -86,17 +86,9 @@ if __name__ == '__main__':
                          'Значение координат должно быть числом')
 
     print('{} {}'.format('Самый большой бар',
-                             get_name_bar(get_biggest_bar(loaded_data))))
+                         get_name_bar(get_biggest_bar(loaded_data))))
     print('{} {}'.format('Самый маленький бар',
-                             get_name_bar(get_smallest_bar(loaded_data))))
+                         get_name_bar(get_smallest_bar(loaded_data))))
     print('{} {}'.format('Ближайший бар',
-                         get_name_bar(
-                             get_closest_bar(
-                                 loaded_data,
-                                 longitude,
-                                 latitude
-                             )
-                            )
-                         )
-          )
+                         get_closest_bar(loaded_data, longitude, latitude)))
 
