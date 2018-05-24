@@ -9,21 +9,21 @@ def load_data(file_path):
             bars_data = json.load(data_file)
             return bars_data['features']
     except ValueError:
-        error = 'Данные в файле в неправильном формате'
-        raise ValueError(error)
-    except FileNotFoundError:
-        error = '.json файл с данными о барах не найден!'
-        raise FileNotFoundError(error)
+        return None
 
 
 def get_biggest_bar(bar_list):
-    return max(bar_list,
-               key=lambda x: x['properties']['Attributes']['SeatsCount'])
+    return max(
+        bar_list,
+        key=lambda x: x['properties']['Attributes']['SeatsCount']
+    )
 
 
 def get_smallest_bar(bar_list):
-    return min(bar_list,
-               key=lambda x: x['properties']['Attributes']['SeatsCount'])
+    return min(
+        bar_list,
+        key=lambda x: x['properties']['Attributes']['SeatsCount']
+    )
 
 
 def get_distance_to_bar(longitude, latitude, coordinates_x, coordinates_y):
@@ -36,21 +36,16 @@ def get_name_bar(bar):
 
 
 def get_closest_bar(bar_list, longitude, latitude):
-    try:
-        closest_bar = min(
-            bar_list,
-            key=lambda x: get_distance_to_bar(
-                float(longitude),
-                float(latitude),
-                x['geometry']['coordinates'][0],
-                x['geometry']['coordinates'][1]
-            )
+    closest_bar = min(
+        bar_list,
+        key=lambda x: get_distance_to_bar(
+            float(longitude),
+            float(latitude),
+            x['geometry']['coordinates'][0],
+            x['geometry']['coordinates'][1]
         )
-        return get_name_bar(closest_bar)
-    except ValueError:
-        error = 'Ошибка при расчете ближайшего бара. ' \
-                'Значение координат должно быть числом'
-        raise ValueError(error)
+    )
+    return closest_bar
 
 
 def create_parser():
@@ -60,16 +55,48 @@ def create_parser():
     return parser
 
 
+def is_float_number(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+
 if __name__ == '__main__':
     script_argument = create_parser().parse_args()
-    loaded_data = load_data(script_argument.file_path)
+    try:
+        loaded_data = load_data(script_argument.file_path)
+        if loaded_data is None:
+            error = 'Данные в файле в неправильном формате'
+            raise ValueError(error)
+    except FileNotFoundError:
+        error = '.json файл с данными о барах не найден!'
+        raise FileNotFoundError(error)
+
     longitude = input('Укажите долготу(longitude) '
                       'вашего местоположения (например 37.35807): ')
-    latitude = input('Укажите широту(latitude)'
+    latitude = input('Укажите широту(latitude)' 
                      ' вашего местоположения (например: 55.846144): ')
+
+    if is_float_number(longitude) and is_float_number(latitude):
+        pass
+    else:
+        raise ValueError('Ошибка расчета ближайшего бара. '
+                         'Значение координат должно быть числом')
+
     print('{} {}'.format('Самый большой бар',
-                         get_name_bar(get_biggest_bar(loaded_data))))
+                             get_name_bar(get_biggest_bar(loaded_data))))
     print('{} {}'.format('Самый маленький бар',
-                         get_name_bar(get_smallest_bar(loaded_data))))
+                             get_name_bar(get_smallest_bar(loaded_data))))
     print('{} {}'.format('Ближайший бар',
-                         get_closest_bar(loaded_data, longitude, latitude)))
+                         get_name_bar(
+                             get_closest_bar(
+                                 loaded_data,
+                                 longitude,
+                                 latitude
+                             )
+                         )
+                         )
+          )
+
